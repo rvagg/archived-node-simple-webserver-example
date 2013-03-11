@@ -16,4 +16,5 @@
         "Rod Vagg <rod@vagg.org> (https://github.com/rvagg)"
     ]
   , "license": "MIT"
+  , "private": true
 }
