@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <script type="text/javascript" src="//use.typekit.net/rbj1mpg.js"></script>
+  <script type="text/javascript">try{Typekit.load();}catch(e){}</script>
+  <title>Noodle&mdash;Node.js on Kindle</title>
+  <style>
+    body {
+      background: transparent url(bg.gif) repeat top left;
+      color: #444;
+      font-size: 62.5%;
+    }
+    #wrapper {
+      width: 878px;
+      margin: 0 auto;
+      margin-top: 160px;
+      margin-bottom: 40px;
+      height: 1%;
+    }
+    h1 {
+      font-size: 4.8em;
+      font-weight: 300;
+      margin-bottom: 0;
+    }
+    h2 {
+      font-size: 3em;
+      font-style: italic;
+      margin-top: 0;
+    }
+    h3 {
+      font-size: 1.8em;
+    }
+    p, pre {
+      font-size: 1.5em;
+    }
+    a {
+      color: #21759B;
+      border-bottom: 1px dotted #ccc;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <div id="wrapper">
+    <h1>Noodle</h1>
+    <h2>Node.js on <a href="https://twitter.com/rvagg">@rvagg</a>'s Kindle</h2>
+    <p>This site is being served from a simple Node.js web server running on my Kindle Paperwhite via a wifi connection.</p>
+    <p>Ongoing notes of my adventures can be found <a href="https://gist.github.com/rvagg/5095506">here</a>, I'll do some proper write-ups when I have time and when it's a little more complete.</p>
+    <h3><code>uname -a</code></h3>
+    <pre>{{ uname }}</pre>
+    <h3><code>uptime</code></h3>
+    <pre>{{ uptime }}</pre>
+    <h3><code>cat /proc/cpuinfo</code></h3>
+    <pre>{{ cpuinfo }}</pre>
+    <h3><code>cat /proc/meminfo</code></h3>
+    <pre>{{ meminfo }}</pre>
+  </div>
+</body>
+</html>
