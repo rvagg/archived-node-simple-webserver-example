@@ -1,0 +1,33 @@
+body {
+  background: transparent url(bg.gif) repeat top left;
+  color: #444;
+  font-size: 62.5%;
+}
+#wrapper {
+  width: 878px;
+  margin: 0 auto;
+  margin-top: 160px;
+  margin-bottom: 40px;
+  height: 1%;
+}
+h1 {
+  font-size: 4.8em;
+  font-weight: 300;
+  margin-bottom: 0;
+}
+h2 {
+  font-size: 3em;
+  font-style: italic;
+  margin-top: 0;
+}
+h3 {
+  font-size: 1.8em;
+}
+p, pre {
+  font-size: 1.5em;
+}
+a {
+  color: #21759B;
+  border-bottom: 1px dotted #ccc;
+  text-decoration: none;
+}
