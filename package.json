@@ -1,0 +1,19 @@
+{
+    "name"         : "simple-webserver-example"
+  , "version"      : "0.0.0"
+  , "description"  : "A simple functional example webserver for Node.js"
+  , "main"         : "index.js"
+  , "dependencies" : {
+        "swig"  : "~0.13.5"
+      , "after" : "~0.7.0"
+      , "st"    : "~0.1.2"
+    }
+  , "repository": {
+        "type": "git"
+      , "url": "git://github.com/rvagg/node-simple-webserver-example.git"
+    }
+  , "authors"         : [
+        "Rod Vagg <rod@vagg.org> (https://github.com/rvagg)"
+    ]
+  , "license": "MIT"
+}
