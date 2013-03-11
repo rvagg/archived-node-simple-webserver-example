@@ -1,6 +1,6 @@
 const PORT = 8080
 
-/* The use of `const` here is purely aesthetic, I use it to make my imports
+/* The use of `const` below is purely aesthetic, I use it to make my imports
  * stand apart. Normally they would just be `var`s.
  */
 
@@ -24,14 +24,14 @@ const http  = require('http')
       // http://npm.im/after
     , after = require('after')
 
-var uname   // a global to `uname -a` data
-  , cpuinfo // a global to store `cat /proc/cpuinfo` data
+var uname   // a global to store `uname -a` output
+  , cpuinfo // a global to store `cat /proc/cpuinfo` output
 
     /* An access.log implemented as a WritableStream. This is globally available
      * and you can call logStream.write() from any request and it'll be pushed
      * into the file with no concern about multi-threaded file access.
      */
-  , logStream = fs.createWriteStream('access.log', { flags: 'a' })
+  , logStream = fs.createWriteStream(__dirname + '/access.log', { flags: 'a' })
 
     /* Initialise an instance of `st`, define a mount point to share static
      * resources. Anything we put in ./public/ will be available on our server
@@ -39,7 +39,7 @@ var uname   // a global to `uname -a` data
      */
   , mount = st({
                 // the path to the resources on the filesystem to share
-                // __dirname is always the directory of the *current file*
+                // __dirname is always the directory of *this JS file*
         path  : __dirname + '/public/'
                 // the root on our server where the resources are shared
       , url   : '/'
@@ -52,9 +52,9 @@ var uname   // a global to `uname -a` data
     })
 
     /* A function that will execute `cat /proc/meminfo` and return the contents
-     * on the callback argument when it's complete.
+     * on a callback argument when it's complete.
      * Note that there is no return value here. Async requires that you return
-     * your values on a callback function with the signature: function (err, data)
+     * your values on a callback function, usually with the signature: function (err, data)
      * where the first argument is any error that may have occured, or null if no
      * error and the second argument is what you might `return` in a non-async
      * environment.
@@ -97,19 +97,18 @@ var uname   // a global to `uname -a` data
   , index = function (req, res) {
           // In this case, the file is loaded synchronously, swig.compileFile()
           // actually uses `fs.readFileSync()` which *returns* the contents of
-          // the file rather than passes it on a callback. Sync-methods are
-          // normally shunned in Node unless you're doing during your application's
+          // the file rather than passing it on a callback. Sync-methods are
+          // normally shunned in Node unless you're doing it during your application's
           // initialisation (or anywhere else where it occurs only once).
-          // In the case of swig, it caches the result of the file read (unless)
+          // In the case of swig, it caches the result of the file read (unless
           // you tell it not to), so the sync-read is acceptable because it won't
           // be happening on every pass through this function.
       var tmpl = swig.compileFile('index.html')
-          // the model to pass to the template
+          // the model to pass to the template, populated with out static data now
+          // but filled with our dynamic data below (meminfo and uptime)
         , vars = {
               uname   : uname
             , cpuinfo : cpuinfo
-            , meminfo : meminfo
-            , uptime  : uptime
           }
           // Here we set up a simple async-helper. The `after` module creates
           // a new function for us that will execute the function we give it
@@ -181,7 +180,7 @@ var uname   // a global to `uname -a` data
 // a main() function).
 // -----------------------------------------------------------------------------
 
-// Initialise swig, there's plenty more options but we only care about a few
+// Initialise swig, there's plenty more options but we only care about a few here
 swig.init({
     autoescape  : true
     // turn off caching behaviour for development environments (set by running
@@ -202,13 +201,13 @@ exec('uname -a', function (err, stdout) {
   if (err) throw err
   // There's a little problem here that we're going to ignore for the purposes
   // of this example, but you may not want to ignore it in a real app.
-  // execution inside this current function won't happen until after we've done
+  // Execution inside this current function won't happen until after we've done
   // our `http.createServer()` below, because it's been sent off to a worker-
   // thread and won't come back until the exec() has completed and the JS-thread
   // is ready. So, it's possible that our server is up and running, accepting
-  // connections, before we have a `uname` global variable (and maybe the
+  // connections, before we have a `uname` global variable set (and maybe the
   // `cpuinfo` variable set in the next block).
-  // We're not going to care because (1) it'll be ready in less than a second
+  // We're not going to care here because (1) it'll be ready in less than a second
   // so the likelyhood of anyone making a request in the space of time that the
   // value isn't set is very small, and (2) it'll just render as `null`, and so
   // what?
@@ -235,9 +234,9 @@ http.createServer(function (req, res) {
   log(req)
 
   // The only special case we have is for requests to `/`, if you had more
-  // pages you wanted to server then you could set them up here. Once you have
+  // pages you wanted to serve then you could set them up here. Once you have
   // too many pages then you may want to consider bringing in a router module
-  // to handle complex path setups for you.
+  // to handle complex paths for you.
   if (req.url == '/')
     return index(req, res) // return here is only used for short-cutting
 
@@ -247,9 +246,9 @@ http.createServer(function (req, res) {
   // but if they are not found then it'll 404.
   mount(req, res)
 }).listen(PORT) // Start the HTTP server. The server isn't actually started
-                // instantly, that happens in a worker-thread, but we only care
-                // about incoming requests which get to us via the handler
-                // function above.
+                // before this function returns, that happens in a worker-thread,
+                // but we only care about incoming requests which get to us via
+                // the handler function above.
 
 // print to stdout
 console.log('Listening for connections on port', PORT)
